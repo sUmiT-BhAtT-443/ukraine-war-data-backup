@@ -2,27 +2,32 @@ name: Update Ukraine Data
 
 on:
   schedule:
-    - cron: "0 0 * * *"  
-  workflow_dispatch:       
+    - cron: "0 0 * * *"   # Roz raat 12 baje chalega (UTC time)
+  workflow_dispatch:       # Manual run ke liye bhi
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v3
 
+      # 2️⃣ Download datasets
       - name: Download datasets
         run: |
           mkdir -p data
           curl -L "https://raw.githubusercontent.com/scarnecchia/oryx_data/main/totals_by_system.csv" -o data/totals_by_system.csv
           curl -L "https://raw.githubusercontent.com/favstats/uaconflict_equipmentloss/main/daily_count.csv" -o data/daily_count.csv
           curl -L "https://raw.githubusercontent.com/PetroIvaniuk/2022-Ukraine-Russia-War-Dataset/main/data/russia_losses_personnel.json" -o data/russia_losses_personnel.json
+          ls -l data   # Verify files are downloaded
 
+      # 3️⃣ Commit & push using GitHub Token
       - name: Commit and push
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
           git add data/*
           git commit -m "Auto-update datasets" || echo "No changes"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
+

@@ -1,0 +1,7 @@
+- name: Download datasets
+  run: |
+    mkdir -p data
+    curl -L "https://raw.githubusercontent.com/scarnecchia/oryx_data/main/totals_by_system.csv" -o data/totals_by_system.csv
+    curl -L "https://raw.githubusercontent.com/favstats/uaconflict_equipmentloss/main/daily_count.csv" -o data/daily_count.csv
+    curl -L "https://raw.githubusercontent.com/PetroIvaniuk/2022-Ukraine-Russia-War-Dataset/main/data/russia_losses_personnel.json" -o data/russia_losses_personnel.json
+    ls -l data   # Ye check karne ke liye ki files aa gayi hain
